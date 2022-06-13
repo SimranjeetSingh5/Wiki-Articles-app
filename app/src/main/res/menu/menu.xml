@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+        <item
+            android:id="@+id/featuredFragment"
+            android:title="@string/featured"
+            android:icon="@drawable/ic_star"
+            />
+
+        <item
+            android:id="@+id/articlesFragment"
+            android:title="@string/articles"
+            android:icon="@drawable/ic_article"/>
+
+        <item
+            android:id="@+id/categoryFragment"
+            android:title="@string/category"
+            android:icon="@drawable/ic_category"/>
+</menu>
