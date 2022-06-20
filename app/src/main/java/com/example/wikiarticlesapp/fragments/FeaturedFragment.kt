@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AbsListView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -48,8 +49,7 @@ class FeaturedFragment : Fragment(R.layout.fragment_featured) {
                     hideProgressBar()
                     response.data?.let {
                         articlesResponse ->
-                        articlesAdapter.differ.submitList(articlesResponse.query.pages.values.toMutableList())
-
+                        articlesAdapter.differ.submitList(articlesResponse.query.pages.values.toList())
                     }
                 }
                 is Resource.Error->{
@@ -61,11 +61,16 @@ class FeaturedFragment : Fragment(R.layout.fragment_featured) {
                 is Resource.Loading->{
                     showProgressBar()
                 }
+                else -> {
+                    Toast.makeText(activity,"Something is wrong",Toast.LENGTH_LONG).show()
+                }
             }
 
         })
 
     }
+
+
 
 
     private fun hideProgressBar() {
@@ -92,7 +97,7 @@ class FeaturedFragment : Fragment(R.layout.fragment_featured) {
                 val firstVisibleItemPositon = layoutManager.findFirstVisibleItemPosition()
                 val visibleItemCount = layoutManager.childCount
                 val totalItemCount = layoutManager.itemCount
-//
+
                 val isNotLoadingAndNotLastPage = !isLoading && !isLastPage
                 val isAtLastItem = firstVisibleItemPositon + visibleItemCount >= totalItemCount
                 val isNotAtBeginning = firstVisibleItemPositon >= 0
@@ -103,8 +108,8 @@ class FeaturedFragment : Fragment(R.layout.fragment_featured) {
 
 //                    Toast.makeText(context,shouldPaginate.toString(), Toast.LENGTH_LONG).show()
                     viewModel.getArticles()
-
                     isScrolling = false
+
                 }
         }
         override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {

@@ -10,7 +10,6 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.android.tools.build.jetifier.core.utils.Log
-import com.example.wikiarticlesapp.utils.Constants
 import com.example.wikiarticlesapp.R
 import com.example.wikiarticlesapp.utils.Resource
 import com.example.wikiarticlesapp.activities.MainActivity
@@ -46,8 +45,10 @@ class ArticlesFragment : Fragment(R.layout.fragment_articles) {
                     hideProgressBar()
                     response.data?.let {
                             randomResponse ->
-                        articlesAdapter.randiffer.submitList(randomResponse.query?.pages?.values?.toMutableList())
 
+                        articlesAdapter.randiffer.submitList(randomResponse.query?.pages?.values?.toList())
+//                        val data = randomResponse.query?.pages?.values
+//                        saveData(data!!)
 //                        Toast.makeText(context,randomResponse.query?.pages?.values?.toString(),Toast.LENGTH_LONG).show()
 //                            Log.e("Random data",randomResponse.query.pages.values.toString())
                     }
@@ -66,6 +67,8 @@ class ArticlesFragment : Fragment(R.layout.fragment_articles) {
         })
 
     }
+
+
 
     private fun hideProgressBar() {
         binding.paginationProgressBar.visibility =View.INVISIBLE
@@ -95,8 +98,8 @@ class ArticlesFragment : Fragment(R.layout.fragment_articles) {
             val isNotLoadingAndNotLastPage = !isLoading && !isLastPage
             val isAtLastItem = firstVisibleItemPositon + visibleItemCount >= totalItemCount
             val isNotAtBeginning = firstVisibleItemPositon >= 0
-            val isTotalMoreThanVisible = totalItemCount >= Constants.QUERY_PAGE_SIZE
-            val shouldPaginate = isNotLoadingAndNotLastPage && isAtLastItem && isNotAtBeginning && isTotalMoreThanVisible && isScrolling
+//            val isTotalMoreThanVisible = totalItemCount >= Constants.QUERY_PAGE_SIZE
+            val shouldPaginate = isNotLoadingAndNotLastPage && isAtLastItem && isNotAtBeginning  && isScrolling
 
             if (shouldPaginate){
 

@@ -1,5 +1,6 @@
 package com.example.wikiarticlesapp.models
 
+import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.google.gson.annotations.Expose
@@ -30,11 +31,14 @@ data class Continue (
 //@Entity(tableName = "articles")
 data class Item (
 
-//    @PrimaryKey(autoGenerate = true)
+    @PrimaryKey(autoGenerate = true)
     @SerializedName("pageid"          ) var pageid          : Int?                 = null,
+
     @SerializedName("ns"              ) var ns              : Int?                 = null,
+//    @ColumnInfo(name = "title")
     @SerializedName("title"           ) var title           : String?              = null,
     @SerializedName("imagerepository" ) var imagerepository : String?              = null,
+//    @ColumnInfo(name = "myData_array")
     @SerializedName("imageinfo"       ) var imageinfo       : MutableList<Imageinfo>           = mutableListOf()
 )
 

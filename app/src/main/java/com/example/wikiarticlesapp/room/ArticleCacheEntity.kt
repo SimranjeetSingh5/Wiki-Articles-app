@@ -17,7 +17,4 @@ data class ArticleCacheEntity(
     var description:String
 
 
-
-
-
 )

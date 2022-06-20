@@ -1,4 +1,4 @@
-package com.example.wikiarticlesapp.database
+//package com.example.wikiarticlesapp.database
 //
 //import android.content.Context
 //import androidx.room.Database

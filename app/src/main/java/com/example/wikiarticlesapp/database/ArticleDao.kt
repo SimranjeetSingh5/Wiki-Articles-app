@@ -1,4 +1,4 @@
-package com.example.wikiarticlesapp.database
+//package com.example.wikiarticlesapp.database
 //
 //import androidx.lifecycle.LiveData
 //import androidx.room.*

@@ -1,21 +1,24 @@
 package com.example.wikiarticlesapp.viewmodel
 
+//import com.example.wikiarticlesapp.database.ArticleDatabase
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.wikiarticlesapp.utils.Resource
-import com.example.wikiarticlesapp.models.ArticlesResponse
-import com.example.wikiarticlesapp.models.CategoryResponse
-import com.example.wikiarticlesapp.models.RandomResponse
+import com.android.tools.build.jetifier.core.utils.Log
+import com.example.wikiarticlesapp.models.*
 import com.example.wikiarticlesapp.repository.ArticlesRepository
+import com.example.wikiarticlesapp.utils.Resource
 import kotlinx.coroutines.launch
 import retrofit2.Response
+import java.lang.reflect.Array
+import java.util.*
+
 
 class ArticlesViewModel (
      val repository: ArticlesRepository
 ) : ViewModel() {
 
-    val articles: MutableLiveData<Resource<ArticlesResponse>> = MutableLiveData()
+    val articles: MutableLiveData<Resource<ArticlesResponse?>?> = MutableLiveData()
     var articlesResponse:ArticlesResponse? = null
     val randomArticles: MutableLiveData<Resource<RandomResponse>> = MutableLiveData()
     var randomResponse:RandomResponse? = null
@@ -25,9 +28,6 @@ class ArticlesViewModel (
     var continueArt = ""
     var acconti = ""
     var continueCat = ""
-    var imRan = ""
-    var grnRan = ""
-    var continueRan = ""
 
     init {
         getArticles()
@@ -43,14 +43,15 @@ class ArticlesViewModel (
 
         }
 
-    fun getRandomArticles()=
+
+    fun getRandomArticles() =
         viewModelScope.launch {
             randomArticles.postValue(Resource.Loading())
-            val response = repository.getRandomArticles(imRan, grnRan,continueRan)
+            val response = repository.getRandomArticles()
             randomArticles.postValue(handleRandomResponse(response))
         }
 
-    fun getCategory()=
+    fun getCategory() =
         viewModelScope.launch {
             category.postValue(Resource.Loading())
             val response = repository.getCategory(acconti,continueCat)
@@ -58,19 +59,21 @@ class ArticlesViewModel (
         }
 
 
-    private fun handleArticleResponse(response: Response<ArticlesResponse>): Resource<ArticlesResponse>? {
+    private fun handleArticleResponse(response: Response<ArticlesResponse>): Resource<ArticlesResponse?>? {
         if (response.isSuccessful){
             response.body()?.let { resultResponse ->
 
                 gcmcontinue = resultResponse.continueArticles?.gcmcontinue.toString()
                 continueArt = resultResponse.continueArticles?.continueArticles.toString()
 
-                if (articlesResponse == null)
+                if (articlesResponse == null) {
                     articlesResponse = resultResponse
-             else{
-                    val oldArticles = articlesResponse?.query?.pages?.values
-                    val newArticles = resultResponse.query.pages.values
-                    oldArticles?.addAll(newArticles)
+                }
+                else{
+                    var oldArticles = articlesResponse?.query?.pages
+                    val newArticles= resultResponse.query.pages
+
+                    oldArticles?.putAll(newArticles)
                 }
                 return  Resource.Success(articlesResponse ?: resultResponse)
             }
@@ -81,26 +84,22 @@ class ArticlesViewModel (
         if (response.isSuccessful){
 
             response.body()?.let{ranResponse->
-
-                imRan = ranResponse.continueArticles?.continueRan.toString()
-                grnRan = ranResponse.continueArticles?.grncontinue.toString()
-                continueRan = ranResponse.continueArticles?.continueRan.toString()
-
-                if (randomResponse == null)
+                if (randomResponse == null) {
                     randomResponse = ranResponse
-                else{
-                    val oldArticles = randomResponse?.query?.pages?.values
-                    val newArticles = ranResponse.query?.pages?.values
-                    if (newArticles != null) {
-                        oldArticles?.addAll(newArticles)
-                    }
+                }else{
+                    var old = randomResponse!!.query?.pages
+                    val new = ranResponse!!.query?.pages
+                    old?.putAll(new!!)
+
                 }
+
                 return  Resource.Success(randomResponse ?: ranResponse)
             }
         }
 
         return  Resource.Error(response.message())
     }
+
     private fun handleCategoryResponse(response: Response<CategoryResponse>): Resource<CategoryResponse> {
         if (response.isSuccessful){
             response.body()?.let {catResponse->
@@ -108,15 +107,14 @@ class ArticlesViewModel (
                 acconti = catResponse.continueArticles?.accontinue.toString()
                 continueCat = catResponse.continueArticles?.continueCat.toString()
 
-                if (categoryResponse==null){
+                if (categoryResponse == null){
                     categoryResponse = catResponse
                 }else{
-
                     val oldCat = categoryResponse?.query?.allcategories
                     val newCat = catResponse.query.allcategories
-                    oldCat?.addAll(newCat)
+                    oldCat?.addAll(newCat!!)
                 }
-                return  Resource.Success(categoryResponse?:catResponse)
+                return  Resource.Success(categoryResponse ?: catResponse)
             }
         }
         return  Resource.Error(response.message())

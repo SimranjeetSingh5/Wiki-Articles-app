@@ -1,7 +1,6 @@
 package com.example.wikiarticlesapp.adapters
 
 import android.view.LayoutInflater
-import android.view.RoundedCorner
 import android.view.ViewGroup
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
@@ -9,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
-import com.bumptech.glide.request.RequestOptions.fitCenterTransform
+import com.bumptech.glide.signature.ObjectKey
 import com.example.wikiarticlesapp.R
 import com.example.wikiarticlesapp.databinding.ItemArticlePreviewBinding
 import com.example.wikiarticlesapp.databinding.ItemRandomArticleBinding
@@ -80,16 +79,18 @@ class ArticlesAdapter(val layoutType:String): RecyclerView.Adapter<RecyclerView.
             "Featured" -> {
                 val articleHolder:ArticleViewHolder = holder as ArticleViewHolder
                 val article= differ.currentList[position]
+                val myOptions = RequestOptions()
+                    .centerCrop()
+                    .override(100, 100)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
                 Glide.with(articleHolder.itemView.context)
                     .load(article.imageinfo[0].url)
-                    .thumbnail(0.25f)
-                    .placeholder(R.drawable.ic_star)
-                    .into(articleHolder.binding.ivArticleImage);
-    //        Glide.with(articleHolder.itemView.context).load(article.imageinfo[0].url).into(articleHolder.binding.ivArticleImage)
+                    .apply(myOptions)
+                    .placeholder(R.drawable.place)
+                    .into(articleHolder.binding.ivArticleImage)
                 articleHolder.binding.tvSource.text = article.imageinfo[0].user
                 val title = article.title?.subSequence(6, article.title?.length!! -4)
                 articleHolder.binding.artTitle.text = title
-//                articleHolder.binding.tvDescription.text = article.imageinfo[0].descriptionurl
                 articleHolder.binding.tvPublishedAt.text = article.imageinfo[0].timestamp!!.subSequence(0,10)
                 setOnItemClickListener {
                     onItemClickListener?.let {

@@ -46,7 +46,7 @@ class CategoryFragment : Fragment(R.layout.fragment_category){
                     hideProgressBar()
                     response.data?.let {
                             categoryResponse ->
-                        articlesAdapter.catDiffer.submitList(categoryResponse.query.allcategories)
+                        articlesAdapter.catDiffer.submitList(categoryResponse.query.allcategories.toList())
                     }
                 }
                 is Resource.Error->{
@@ -75,7 +75,6 @@ class CategoryFragment : Fragment(R.layout.fragment_category){
 
 
     var isLoading = false
-    var isLastPage = false
     var isScrolling = false
 
 
@@ -88,10 +87,12 @@ class CategoryFragment : Fragment(R.layout.fragment_category){
             val visibleItemCount = layoutManager.childCount
             val totalItemCount = layoutManager.itemCount
 
+
+            val isNotLoading = !isLoading
             val isAtLastItem = firstVisibleItemPositon + visibleItemCount >= totalItemCount
             val isNotAtBeginning = firstVisibleItemPositon >= 0
             val isTotalMoreThanVisible = totalItemCount >= Constants.QUERY_PAGE_SIZE
-            val shouldPaginate = isAtLastItem && isNotAtBeginning && isTotalMoreThanVisible && isScrolling
+            val shouldPaginate = isNotLoading && isAtLastItem && isNotAtBeginning  && isTotalMoreThanVisible && isScrolling
 
             if (shouldPaginate){
 

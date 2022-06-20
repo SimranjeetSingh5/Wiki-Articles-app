@@ -8,6 +8,7 @@ import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Query
 import retrofit2.http.Url
+import java.util.*
 
 interface ApiService {
 
@@ -18,16 +19,13 @@ interface ApiService {
                 @Query("continue") conti:String?
         ): Response<ArticlesResponse>
 
-        @GET(Constants.ARTICLES_URL)
+        @GET
         suspend fun getRandomArticles(
-
-            @Query("imcontinue") imcontinue:String?,
-            @Query("grncontinue") grncontinue:String?,
-            @Query("continue") conti:String?,
-        ):Response<RandomResponse>
+            @Url url:String?)
+        :Response<RandomResponse>
 
         @GET
-        suspend fun getCategory(@Url url:String?,
+        suspend fun getCategory(@Url url:String,
                                 @Query("accontinue") acconti:String?,
                                 @Query("continue") conti:String?
         ):Response<CategoryResponse>

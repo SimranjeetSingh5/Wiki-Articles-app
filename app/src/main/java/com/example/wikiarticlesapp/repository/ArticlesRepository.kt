@@ -10,7 +10,7 @@ class ArticlesRepository constructor(
 ){
     suspend fun getArticles(gcm:String,conti:String) = RetrofitInstance.api.getArticles(gcm,conti)
 
-    suspend fun getRandomArticles(imconti:String,grnconti:String,conti:String) = RetrofitInstance.api.getRandomArticles(imconti,grnconti,conti)
+    suspend fun getRandomArticles() = RetrofitInstance.api.getRandomArticles((Constants.ARTICLES_URL))
 
     suspend fun getCategory(acconti:String,conti:String) = RetrofitInstance.api.getCategory((Constants.CATEGORY_URL),acconti, conti)
 
